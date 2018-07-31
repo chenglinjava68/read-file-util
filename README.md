@@ -24,7 +24,7 @@ IO断点续读工具
              接口与实现分离
              
              
-   使用:
+   使用:</br>
    1.启动Redis </br>
    2.启动RabbitMQ </br>
    3.启动SpringBoot </br>
@@ -32,3 +32,4 @@ IO断点续读工具
    发送读取请求：http://localhost:8080/get  </br>
    发送获取请求：http://localhost:8080/read </br>
              
+     版权所有
