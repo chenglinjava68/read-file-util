@@ -25,7 +25,11 @@ IO断点续读工具
              延迟重试优化 ×                   
              接口与实现分离 ×
              迭代器请求优化 ×
-   
+ 
+
+粗略架构
+![架构]()
+  
 暴露的接口
 ![暴露的接口](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E6%9A%B4%E9%9C%B2%E6%8E%A5%E5%8F%A3.png)          
 
