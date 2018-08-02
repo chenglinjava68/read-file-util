@@ -28,7 +28,7 @@ IO断点续读工具
  
 
 粗略架构
-![架构]()
+![架构](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/IMG20180731_110807.png)
   
 暴露的接口
 ![暴露的接口](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E6%9A%B4%E9%9C%B2%E6%8E%A5%E5%8F%A3.png)          
