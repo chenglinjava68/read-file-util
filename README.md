@@ -18,11 +18,12 @@ IO断点续读工具
             
              获取请求封装为迭代器√
              读取请求异步化 √
-             心跳检测 ×
+             定时心跳检测 ×
              Eureka服务化  ×
              Rabbit、Redis持久化处理 ×
              延迟重试优化 ×                   
              接口与实现分离 ×
+             迭代器请求优化 ×
              
              
    使用:</br>
@@ -30,11 +31,13 @@ IO断点续读工具
    2.启动RabbitMQ </br>
    3.启动SpringBoot </br>
 
-   <del>发送读取请求：http://localhost:8080/get</del></br>
-   <del>发送获取请求：http://localhost:8080/read</del></br>
    
-   请求接口:
-   http://localhost:8080/read
+   <del>发送读取请求：http://localhost:8080/get</del><br>
+   <del>发送获取请求：http://localhost:8080/read</del><br>
+   以上方法需要由客户端发送2次请求，已废除
+   
+   新接口：</br>
+   http://localhost:8080/read <br>
    返回：
    Iterator<List<String>>的实现类
              
