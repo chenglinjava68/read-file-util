@@ -2,11 +2,13 @@ package com.netease.readfileutil.redis;
 
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 @Service
+@Order
 public class RedisService {
 
     @Autowired

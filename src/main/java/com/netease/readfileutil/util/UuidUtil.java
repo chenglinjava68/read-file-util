@@ -20,7 +20,7 @@ public class UuidUtil {
 
         FileOutputStream out = new FileOutputStream(file);
         String uuid = "";
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
             uuid = System.nanoTime() + "\r\n";
             out.write(uuid.getBytes());
         }

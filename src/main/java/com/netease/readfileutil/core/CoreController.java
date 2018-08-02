@@ -1,109 +1,94 @@
 package com.netease.readfileutil.core;
 
 import com.netease.readfileutil.commons.ParamConstants;
-import com.netease.readfileutil.rabbitmq.FileMessage;
 import com.netease.readfileutil.rabbitmq.MQReceiver;
-import com.netease.readfileutil.rabbitmq.MQSender;
 import com.netease.readfileutil.redis.RedisService;
-import com.netease.readfileutil.util.UuidUtil;
 import com.rabbitmq.client.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @date: 2018-07-31
  * @author: liguobin
- * @description:
+ * @description: 暴露接口
  */
 
-@Controller
+@RestController
 public class CoreController {
 
-    @Autowired
-    MQSender mqSender;
 
     @Autowired
-    MQReceiver mqReceiver;
+    private MQReceiver mqReceiver;
 
     @Autowired
-    RedisService redisService;
+    private RedisService redisService;
 
     @Autowired
-    ReadFileUtilCore readFileUtilCore;
+    private CoreAsyncHandler coreAsyncHandler;
 
     @Autowired
-    Channel channel;
+    private Channel channel;
 
 
-//    @RequestMapping("/get")
-//    @ResponseBody
-//    public Iterator get() {
-//
-//        String clientId = UuidUtil.getUuid();
-//        //先查询
-//        FileMessage fileMessage = redisService.getBean(ParamConstants.REDIS_KEY, FileMessage.class);
-//        int start;
-//        if (fileMessage == null) {
-//            //说明是第一次读取
-//            start = 0;
-//            fileMessage = new FileMessage();
-//            fileMessage.setClientId(clientId);
-//            redisService.setBean(ParamConstants.REDIS_KEY, 600, fileMessage);//只记录clientID
-//        } else {
-//            //错误继续，或者重启继续
-//            clientId = fileMessage.getClientId();
-//            start = fileMessage.getCurrentBytePos();
-//        }
-//        readFileUtilCore.render(clientId, ParamConstants.path, start);//默认为0，表示从头开始
-//
-//        return mqReceiver.receive();//获取数据，并且返回迭代器,读取完返回null
-//    }
+    @Autowired
+    private CoreHttpAPIService coreHttpAPIService;
 
-    @RequestMapping("/get")
-    @ResponseBody
-    public void get() {
+    @Autowired
+    private CoreIterator coreIterator;
 
-        String clientId = null;
-        //先查询
-        FileMessage fileMessage = redisService.getBean(ParamConstants.REDIS_KEY, FileMessage.class);
-        int start;
-        if (fileMessage == null) {//第一次开始
-            //说明是第一次读取
-            start = 0;
-            clientId = UuidUtil.getUuid();
-            fileMessage = new FileMessage();
-            fileMessage.setClientId(clientId);
-            fileMessage.setLastTimeStamp(System.currentTimeMillis());
-            redisService.setBean(ParamConstants.REDIS_KEY, fileMessage);//只记录clientID
-        } else if (fileMessage.getClientId().equals("-1")) {
-            //读取完成了，以防下次读取，再次请求将重新读取
-            clientId = UuidUtil.getUuid();
-            start = 0;
-            fileMessage = new FileMessage();
-            fileMessage.setClientId(clientId);
-            fileMessage.setLastTimeStamp(System.currentTimeMillis());
-            redisService.setBean(ParamConstants.REDIS_KEY, fileMessage);//只记录clientID
-        } else {
-            //错误继续，或者重启继续
-            clientId = fileMessage.getClientId();
-            start = fileMessage.getCurrentBytePos();
-            fileMessage = new FileMessage();
-            fileMessage.setClientId(clientId);
-            fileMessage.setLastTimeStamp(System.currentTimeMillis());
-            redisService.setBean(ParamConstants.REDIS_KEY, fileMessage);//只记录clientID
-            //发送的时候判断redis的client是否过期
+    /**
+     * 暴露给客户端获取数据的接口
+     * <p>
+     * 只有异步请求返回true,才有必要读取数据，否则应该重新发送请求
+     *
+     * @return
+     */
+    @RequestMapping(value = "/read", method = RequestMethod.GET)
+    public Iterator<List<String>> read() {
+        try {
+            coreAsyncHandler.handler();//异步调用
+            Thread.sleep(3000);
+            if (coreIterator == null) {
+                return null;
+            }
+            while (coreIterator.hasNext()) {
+                List<String> list = (List<String>) coreIterator.next();
+                list.stream().parallel().forEach(s -> System.out.println(s));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        readFileUtilCore.render(clientId, ParamConstants.path, start);//默认为0，表示从头开始
-        //获取数据，并且返回迭代器,读取完返回null
+        return coreIterator;
     }
 
-    @RequestMapping("/read")
-    @ResponseBody
-    public List read() {
-        return mqReceiver.receive(channel);
+    /**
+     * 测试http拉取数据
+     *
+     * @return String
+     * @throws Exception
+     */
+    @RequestMapping(value = "httpclient", method = RequestMethod.GET)
+    public String test() {
+        String str = coreHttpAPIService.doGet(ParamConstants.HOST, ParamConstants.CHARSET);
+        return str;
     }
+
+    /**
+     * 由迭代器请求，得到数据
+     *
+     * @return
+     */
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    public String get() {
+        //pull数据
+        String ret = mqReceiver.receive(channel);
+        if (ret == null) return null;
+        return ret;
+    }
+
 }

@@ -8,6 +8,7 @@ import com.netease.readfileutil.redis.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -26,9 +27,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * @description:
  */
 @Component
-public class ReadFileUtilCore {
+@Order
+public class CoreReadFileUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(ReadFileUtilCore.class);
+    private static final Logger log = LoggerFactory.getLogger(CoreReadFileUtil.class);
     private static final Lock lock = new ReentrantLock();
 
     @Autowired
@@ -48,7 +50,6 @@ public class ReadFileUtilCore {
     private static volatile AtomicInteger atomicInteger = new AtomicInteger(0);
 
     public void render(String client, String path, Integer currentBytePos) {
-        //线程运行时，若已经读取完成，则直接退出
         int byteOfChar = 0;
         byte[] bytes = new byte[fileConfigBean.getBufferSize()];
         int lineNumber = 0;
@@ -118,7 +119,6 @@ public class ReadFileUtilCore {
             nullMessage.setClientId(-1 + "");
             nullMessage.setThreadId(Thread.currentThread().getId());
             redisService.setBean(ParamConstants.REDIS_KEY, nullMessage);//将key变为不过期
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
