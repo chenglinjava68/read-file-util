@@ -24,8 +24,15 @@ IO断点续读工具
              延迟重试优化 ×                   
              接口与实现分离 ×
              迭代器请求优化 ×
-             
-             
+   
+![暴露的接口](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E6%9A%B4%E9%9C%B2%E6%8E%A5%E5%8F%A3.png)          
+
+![核心读取方法](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E6%A0%B8%E5%BF%83%E8%AF%BB%E5%8F%96%E6%96%B9%E6%B3%95.png)
+
+![返回迭代器](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E8%BF%94%E5%9B%9E%E7%9A%84%E6%A0%B8%E5%BF%83%E8%BF%AD%E4%BB%A3%E5%99%A8.png)  
+ 
+![测试单机](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E6%B5%8B%E8%AF%95%E6%89%93%E5%8D%B0%E5%88%B0%E6%8E%A7%E5%88%B6%E5%8F%B0.png)
+
    使用:</br>
    1.启动Redis </br>
    2.启动RabbitMQ </br>
