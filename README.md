@@ -11,17 +11,18 @@ IO断点续读工具
              Spring-boot-starter-amqp
              Fastjson
              Jedis
-             Google限流工具
+             Google guava
+             Apache HttpClient
              
-             未完成部分：
             
-             获取请求封装为迭代器
-             读取请求异步化
-             心跳检测
-             Eureka服务化
-             Rabbit、Redis持久化处理
-             延迟重试优化
-             接口与实现分离
+            
+             获取请求封装为迭代器√
+             读取请求异步化 √
+             心跳检测 ×
+             Eureka服务化  ×
+             Rabbit、Redis持久化处理 ×
+             延迟重试优化 ×                   
+             接口与实现分离 ×
              
              
    使用:</br>
@@ -29,7 +30,12 @@ IO断点续读工具
    2.启动RabbitMQ </br>
    3.启动SpringBoot </br>
 
-   发送读取请求：http://localhost:8080/get  </br>
-   发送获取请求：http://localhost:8080/read </br>
+   <del>发送读取请求：http://localhost:8080/get</del></br>
+   <del>发送获取请求：http://localhost:8080/read</del></br>
+   
+   请求接口:
+   http://localhost:8080/read
+   返回：
+   Iterator<List<String>>的实现类
              
-     版权所有
+     遵守GPL3.0
