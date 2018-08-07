@@ -40,7 +40,7 @@ IO断点续读工具
 
 ![架构](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/IMG20180731_110807.png)
   
-暴露的接口
+暴露的接口，这里数据的获取和迭代器返回同时存在时会打印两条相同数据，猜测主要是返回的迭代器含有http bean，导致的副作用
 
 ![暴露的接口](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E6%9A%B4%E9%9C%B2%E6%8E%A5%E5%8F%A3.png)          
 
@@ -48,7 +48,7 @@ IO断点续读工具
 
 ![核心读取方法](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E6%A0%B8%E5%BF%83%E8%AF%BB%E5%8F%96%E6%96%B9%E6%B3%95.png)
 
-返回迭代器，这里数据的获取和迭代器返回同时存在时会打印两条相同数据，猜测主要是返回的迭代器含有http bean，导致的副作用
+返回迭代器
 
 ![返回迭代器](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E8%BF%94%E5%9B%9E%E7%9A%84%E6%A0%B8%E5%BF%83%E8%BF%AD%E4%BB%A3%E5%99%A8.png)  
  
