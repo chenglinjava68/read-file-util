@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -49,12 +48,11 @@ public class CoreController {
      * @return
      */
     @RequestMapping(value = "/read", method = RequestMethod.GET)
-    public Iterator<List<String>> read() {
+    public void read() {
         try {
             coreAsyncHandler.handler();//异步调用
-            Thread.sleep(3000);
             if (coreIterator == null) {
-                return null;
+                return;
             }
             while (coreIterator.hasNext()) {
                 List<String> list = (List<String>) coreIterator.next();
@@ -63,7 +61,8 @@ public class CoreController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return coreIterator;
+        //测试的时候注释掉返回值，否则返回值这个迭代器会自动请求http,会出现两条重复数据，找了好久才找的问题所在
+//        return coreIterator;
     }
 
     /**

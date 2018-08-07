@@ -15,16 +15,25 @@ IO断点续读工具
              Google guava
              Apache HttpClient
              
+            √：基本完成
+            ×：未完成
+            #：低优先级
             
-            
-             获取请求封装为迭代器√
+             参数默认值与可配置处理 √
+             获取请求封装为迭代器 √
+             流读取分布式锁控制 √
+             redis流状态分布式锁控制 √
              读取请求异步化 √
+             迭代器hasNext临时缓存 √
              定时心跳检测 ×
              Eureka服务化  ×
              Rabbit、Redis持久化处理 ×
+             RabbitMQ确认机制处理  #
              延迟重试优化 ×                   
-             接口与实现分离 ×
+             接口与实现分离 √
              迭代器请求优化 ×
+             无效http连接自动清理 √
+             迭代器依赖CoreHttpAPIService Bean,需要进一步分离 ×
  
 
 粗略架构
@@ -47,17 +56,22 @@ IO断点续读工具
 
 ![测试单机](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E6%B5%8B%E8%AF%95%E6%89%93%E5%8D%B0%E5%88%B0%E6%8E%A7%E5%88%B6%E5%8F%B0.png)
 
-   使用:</br>
-   1.启动Redis </br>
-   2.启动RabbitMQ </br>
-   3.启动SpringBoot </br>
+   使用:
+   
+     1、配置ParamConstants下的path路径，或者编写client，发送http请求，携带uri（必须文件，且此时需要自己增加方法入参）
+     2、使用UuidUtil类生产本地运行所需要的数据（默认long/int,String代码冗余过多，已经去掉，需要自己加上
+        同时config.isString=false改为true即可）
+   
+       1. 启动Redis 
+       2. 启动RabbitMQ 
+       3. 启动SpringBoot
 
    
    <del>发送读取请求：http://localhost:8080/get</del><br>
    <del>发送获取请求：http://localhost:8080/read</del><br>
    以上方法需要由客户端发送2次请求，已废除
    
-   新接口：</br>
+   新接口：<br>
    http://localhost:8080/read <br>
    返回：
    Iterator<List<String>>的实现类
