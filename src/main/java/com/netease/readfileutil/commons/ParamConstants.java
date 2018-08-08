@@ -36,7 +36,7 @@ public class ParamConstants {
     public static final String PATH = "D:\\read-file-util\\data.txt";//默认文件地址，当且仅当测试时应该使用
 
     //拉取线程暂停时间
-    public static final Integer SLEEP_TIME = 1000;//只有在生成者实在太慢的情况下才有必要设置,实际情况下几乎不可能，本地测试发现，生产者实在太慢可能导致消费者next，后续处理可能需要加上重试
+    public static final Integer SLEEP_TIME = 1000;//只有在生成者实在太慢的情况下才有必要设置,实际情况下几乎不可能，本地测试发现，生产者实在太慢可能导致消费者hasNext提前退出循环，后续处理可能需要加上重试
 
     //redis分布式锁
     public static final long OVER_TIME = 2000; //单位毫秒

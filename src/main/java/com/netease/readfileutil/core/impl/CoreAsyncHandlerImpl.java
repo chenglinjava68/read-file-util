@@ -70,7 +70,8 @@ public class CoreAsyncHandlerImpl implements CoreAsyncHandler {
                 redisService.setBean(ParamConstants.REDIS_KEY, fileMessage);//只记录clientID
                 //发送的时候判断redis的client是否过期
             }
-            coreReadFileUtil.render(clientId, ParamConstants.path, start);//默认为0，表示从头开始
+            //这里默认文件是在本地的，如果需要可以使用网络，但是可能需要实现一个断点续传来提供下载服务
+            coreReadFileUtil.render(clientId, ParamConstants.PATH, start);//默认为0，表示从头开始
             //获取数据，并且返回迭代器,读取完返回null
         } finally {
             redisDistributionLock.unLook(ParamConstants.LOCK_KEY, time);
