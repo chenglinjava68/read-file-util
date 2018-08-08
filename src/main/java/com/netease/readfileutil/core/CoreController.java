@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @date: 2018-07-31
  * @author: liguobin
- * @description: 暴露接口
+ * @description: 暴露给客户端的接口
  */
 
 @RestController
@@ -62,7 +62,8 @@ public class CoreController {
             e.printStackTrace();
         }
         //测试的时候注释掉返回值，否则返回值这个迭代器会自动请求http,会出现两条重复数据，找了好久才找的问题所在
-//        return coreIterator;
+        //具体原因可能是返回值中的bean引起的副作用，待处理
+        //return coreIterator;
     }
 
     /**

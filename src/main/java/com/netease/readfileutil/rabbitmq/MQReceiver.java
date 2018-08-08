@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 /**
  * @date: 2018-07-31
  * @author: liguobin
- * @description: 消息接受者，拆分消息，返回集合
+ * @description: 消息接受者，拆分消息，原本是返回集合，现在直接返还字符串
  */
 @Service
 public class MQReceiver {
@@ -32,7 +32,7 @@ public class MQReceiver {
             re = new String(data);
             log.info("拉取>>>" + re);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("MQ拉取异常" + e.getMessage());
         }
         return re;
     }

@@ -12,14 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-
-/**
- * @date: 2018-08-02
- * @author: liguobin
- * @description: httpclient 请求处理
- */
 @Service
-@Order
+@Order//高优先级，否则可能出现问题
 public class CoreHttpAPIServiceImpl implements CoreHttpAPIService {
 
     @Autowired

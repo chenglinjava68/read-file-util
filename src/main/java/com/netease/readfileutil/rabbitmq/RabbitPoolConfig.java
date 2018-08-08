@@ -4,6 +4,11 @@ package com.netease.readfileutil.rabbitmq;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * @date: 2018-07-31
+ * @author: liguobin
+ * @description:RabbitMQ连接池所需要配置项
+ */
 @ConfigurationProperties(prefix = "rabbitmq")
 @Component
 public class RabbitPoolConfig {

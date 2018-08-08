@@ -56,24 +56,24 @@ IO断点续读工具
 
 ![测试单机](https://github.com/jxnu-liguobin/read-file-util/blob/master/src/main/resources/images/%E6%B5%8B%E8%AF%95%E6%89%93%E5%8D%B0%E5%88%B0%E6%8E%A7%E5%88%B6%E5%8F%B0.png)
 
-   使用:
+使用:
    
-     1、配置ParamConstants下的path路径，或者编写client，发送http请求，携带uri（必须文件，且此时需要自己增加方法入参）
-     2、使用UuidUtil类生产本地运行所需要的数据（默认long/int,String代码冗余过多，已经去掉，需要自己加上
-        同时config.isString=false改为true即可）
+<del>1、配置ParamConstants下的path路径，或者编写client，发送http请求，携带uri（必须文件，且此时需要自己增加方法入参）</del><br>
+1、配置application.properties中文件路径：filePath，发送频率：transmissionFrequenc，缓冲区大小：bufferSize【取决于一行数据的大小】    
+2、使用UuidUtil类生产本地运行所需要的数据（默认long/int,String代码冗余过多，已经去掉，需要自己加上,同时config.isString=false改为true即可）
    
        1. 启动Redis 
        2. 启动RabbitMQ 
        3. 启动SpringBoot
 
    
-   <del>发送读取请求：http://localhost:8080/get</del><br>
-   <del>发送获取请求：http://localhost:8080/read</del><br>
-   以上方法需要由客户端发送2次请求，已废除
-   
-   新接口：<br>
-   http://localhost:8080/read <br>
-   返回：
-   Iterator<List<String>>的实现类
-             
-     遵守GPL3.0
+<del>发送读取请求：http://localhost:8080/get</del><br>
+<del>发送获取请求：http://localhost:8080/read</del><br>
+以上方法需要由客户端发送2次请求，已废除
+
+新接口：<br>
+http://localhost:8080/read <br>
+返回：
+Iterator<List<String>>的实现类
+         
+遵守GPL3.0

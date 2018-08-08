@@ -10,6 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * @date: 2018-07-31
+ * @author: liguobin
+ * @description: 消息生成者
+ */
 @Service
 @Order
 public class MQSender {
@@ -28,7 +34,7 @@ public class MQSender {
             byte[] messageBodyBytes = mess.getBytes();
             channel.basicPublish(ParamConstants.FANOUT_EXCHANGE, "", null, messageBodyBytes);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("MQ发送异常：" + e.getMessage());
         }
     }
 

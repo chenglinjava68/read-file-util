@@ -7,7 +7,7 @@ import java.util.List;
  * @author: liguobin
  * @description: 核心读取接口
  */
-public interface CoreReadFileUtil {
+public interface CoreReadFileIO {
 
     /**
      * 解析并读取数据

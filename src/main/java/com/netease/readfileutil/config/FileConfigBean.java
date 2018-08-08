@@ -7,16 +7,16 @@ import org.springframework.stereotype.Component;
 /**
  * @date: 2018-07-27
  * @author: liguobin
- * @description:
+ * @description:文件读取配置，其他ParamConstants中的参数如果需要自定义配置的在这里添加字段，并在application.properties中添加配置即可
  */
 @ConfigurationProperties(prefix = "config")
 @Component
 public class FileConfigBean {
 
-    private String filePath;//文件路径
-    private int transmissionFrequenc = ParamConstants.TRANSMISSION_FREQUENCY;//发送频率
-    private int bufferSize = ParamConstants.BUFFER_SIZE;//缓冲区大小
-    private String isString = ParamConstants.IS_STRING;//是否为字符串数据
+    private String filePath = ParamConstants.PATH;//文件路径，当前仅当测试时应该使用
+    private int transmissionFrequenc = ParamConstants.TRANSMISSION_FREQUENCY;//发送频率默认
+    private int bufferSize = ParamConstants.BUFFER_SIZE;//缓冲区大小默认
+    private String isString = ParamConstants.IS_STRING;//是否为字符串数据，默认false，使用true,需要增加CoreReadFileUtil的实现类，或者在原有类中增加个if,实现具体读取逻辑，基本一致，只是少个Long到String的类型转换
 
     public String getFilePath() {
         return filePath;

@@ -2,7 +2,7 @@ package com.netease.readfileutil.core.impl;
 
 import com.netease.readfileutil.commons.ParamConstants;
 import com.netease.readfileutil.core.CoreAsyncHandler;
-import com.netease.readfileutil.core.CoreReadFileUtil;
+import com.netease.readfileutil.core.CoreReadFileIO;
 import com.netease.readfileutil.rabbitmq.FileMessage;
 import com.netease.readfileutil.redis.RedisDistributionLock;
 import com.netease.readfileutil.redis.RedisService;
@@ -22,11 +22,10 @@ public class CoreAsyncHandlerImpl implements CoreAsyncHandler {
     private RedisService redisService;
 
     @Autowired
-    private CoreReadFileUtil coreReadFileUtil;
+    private CoreReadFileIO coreReadFileUtil;
 
     @Autowired
     private RedisDistributionLock redisDistributionLock;
-
 
     @Async
     @Override
@@ -35,7 +34,7 @@ public class CoreAsyncHandlerImpl implements CoreAsyncHandler {
         try {
 
             time = String.valueOf(System.currentTimeMillis() + ParamConstants.OVER_TIME);
-            if(!redisDistributionLock.lock(ParamConstants.LOCK_KEY, time)){
+            if (!redisDistributionLock.lock(ParamConstants.LOCK_KEY, time)) {
                 log.warn("handler(),加锁失败");
                 return;
             }
@@ -47,7 +46,7 @@ public class CoreAsyncHandlerImpl implements CoreAsyncHandler {
             int start;
             if (fileMessage == null) {//第一次开始
                 //说明是第一次读取
-                start = 0;
+                start = START;
                 clientId = UuidUtil.getUuid();
                 fileMessage = new FileMessage();
                 fileMessage.setClientId(clientId);
@@ -56,7 +55,7 @@ public class CoreAsyncHandlerImpl implements CoreAsyncHandler {
             } else if (fileMessage.getClientId().equals("-1")) {
                 //读取完成了，以防下次读取，再次请求将重新读取
                 clientId = UuidUtil.getUuid();
-                start = 0;
+                start = START;
                 fileMessage = new FileMessage();
                 fileMessage.setClientId(clientId);
                 fileMessage.setLastTimeStamp(System.currentTimeMillis());

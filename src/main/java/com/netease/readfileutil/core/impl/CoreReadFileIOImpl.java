@@ -2,7 +2,7 @@ package com.netease.readfileutil.core.impl;
 
 import com.netease.readfileutil.commons.ParamConstants;
 import com.netease.readfileutil.config.FileConfigBean;
-import com.netease.readfileutil.core.CoreReadFileUtil;
+import com.netease.readfileutil.core.CoreReadFileIO;
 import com.netease.readfileutil.rabbitmq.FileMessage;
 import com.netease.readfileutil.rabbitmq.MQSender;
 import com.netease.readfileutil.redis.RedisDistributionLock;
@@ -18,18 +18,12 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * @date: 2018-07-31
- * @author: liguobin
- * @description:
- */
 @Component
 @Order
-public class CoreReadFileUtilImpl implements CoreReadFileUtil {
+public class CoreReadFileIOImpl implements CoreReadFileIO {
 
-    private static final Logger log = LoggerFactory.getLogger(CoreReadFileUtilImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(CoreReadFileIOImpl.class);
 
     @Autowired
     private FileConfigBean fileConfigBean;
@@ -47,7 +41,7 @@ public class CoreReadFileUtilImpl implements CoreReadFileUtil {
     private List<String> longList = new ArrayList<>();
     private List<String> tempList = new ArrayList<>();
     RandomAccessFile fileInputStream = null;
-    private static AtomicInteger count = new AtomicInteger(0);
+    private static int count = 0;//这里不需要同步原子类了
 
     @Override
     public void render(String client, String path, Integer currentBytePos) {
@@ -57,41 +51,41 @@ public class CoreReadFileUtilImpl implements CoreReadFileUtil {
         int pos = 0;
         try {
             fileInputStream = new RandomAccessFile(new File(path), ParamConstants.MODE);
-            fileInputStream.skipBytes(currentBytePos);
-            int totalPos = currentBytePos;
+            fileInputStream.skipBytes(currentBytePos);//跳过当前被读取的字节
+            int totalPos = currentBytePos;//当前总字节大小被更新
             while ((byteOfChar = fileInputStream.read()) != -1) {
                 totalPos++;
                 if (byteOfChar == ParamConstants.START_DELIMITER) {
-                    int lastPos = totalPos;
+                    int lastPos = totalPos;//记录上一个字节位置
                     byteOfChar = fileInputStream.read();
                     totalPos++;
                     if (byteOfChar == ParamConstants.END_DELIMITER) {
-                        String number = (new String(bytes)).trim();
-
+                        String number = (new String(bytes)).trim();//得到一条数据，去掉空格，如果是String类型可能需要指定编码
                         if (!"true".equals(fileConfigBean.getIsString()) && number.length() > 0) {
                             Long numberInLong = Long.valueOf(number);
                             longList.add(String.valueOf(numberInLong));
-                            tempList.add(String.valueOf(numberInLong));
+                            tempList.add(String.valueOf(numberInLong));//临时列表，拥有保存最后一批数据量不足getTransmissionFrequenc个数的
                             lineNumber++;
                             log.info("total:" + totalPos + ",line:" + numberInLong + ",lineNumber:" + lineNumber);
-                            count.incrementAndGet();
+                            count++;
                             //目前只能处理数据量大于发送频率的
-                            if (count.intValue() == fileConfigBean.getTransmissionFrequenc()) {
+                            if (count == fileConfigBean.getTransmissionFrequenc()) {
                                 boolean success = sendMessage(client, totalPos, longList);
-                                if (!success) return;
-                                count = new AtomicInteger(0);
+                                if (!success) return;//需要补充，触发服务容错，使得注册中心把后续请求分发到其他可用服务上，并可用从redis中读取状态，继续进行
+                                count = 0;
                                 tempList = new ArrayList<>(fileConfigBean.getTransmissionFrequenc());
                                 longList = new ArrayList<>(fileConfigBean.getTransmissionFrequenc());
                             }
-                            bytes = new byte[fileConfigBean.getBufferSize()];
+                            bytes = new byte[fileConfigBean.getBufferSize()];//一行数据读完，缓冲区更新重置
                             pos = 0;
-                            continue;
+                            continue;//读完一行了
                         }
                     } else {
-                        fileInputStream.seek(lastPos);
+                        //特殊情况，字节有开头但没有结尾。。不知道存不存在这种，暂时仅考虑数据是每一行一条
+                        fileInputStream.seek(lastPos);//而且也不知道这个方法能不能改变字节流位置
                     }
                 }
-                bytes[pos++] = (byte) byteOfChar;
+                bytes[pos++] = (byte) byteOfChar;//读取的是中间字节，王缓冲区增加即可
             }
             if (tempList.size() != 0) {
                 sendMessage(client, totalPos, tempList);//添加最后的一个
@@ -103,7 +97,7 @@ public class CoreReadFileUtilImpl implements CoreReadFileUtil {
             try {
                 fileInputStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
     }

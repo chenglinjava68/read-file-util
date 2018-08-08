@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+/**
+ * @date: 2018-07-31
+ * @author: liguobin
+ * @description:Jedis操作redis工具类
+ */
 @Service
 @Order
 public class RedisService {
@@ -126,9 +131,7 @@ public class RedisService {
             e.printStackTrace();
             return false;
         } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
+            returnToPool(jedis);
         }
     }
 

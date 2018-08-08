@@ -16,11 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * @date: 2018-08-01
- * @author: liguobin
- * @description:封装数据拉取请求
- */
 @Component
 @Order
 public class CoreIteratorImpl<T> implements CoreIterator<T> {
