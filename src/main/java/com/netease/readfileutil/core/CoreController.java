@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 /**
@@ -48,7 +47,7 @@ public class CoreController {
      * @return
      */
     @RequestMapping(value = "/read", method = RequestMethod.GET)
-    public String read() throws UnsupportedEncodingException {
+    public String read() {
         byte[] ret = null;
         try {
             coreAsyncHandler.handler();//异步调用
@@ -60,7 +59,7 @@ public class CoreController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ByteArrayUtils.toHexString(ret);
+        return ByteArrayUtils.toHexString(ret);//这里不能直接new String(ret)
         //测试的时候注释掉返回值，否则返回值这个迭代器会自动请求http,会出现两条重复数据，找了好久才找的问题所在
         //具体原因可能是返回值中的bean引起的副作用，待处理
         //return coreIterator;
@@ -70,7 +69,6 @@ public class CoreController {
      * 测试http拉取数据
      *
      * @return String
-     * @throws Exception
      */
     @RequestMapping(value = "httpclient", method = RequestMethod.GET)
     public String test() {

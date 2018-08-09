@@ -48,7 +48,7 @@ public class ByteArrayUtils {
         System.out.println(coreIteratorDecorator.toString());
         Optional<byte[]> bytes = ByteArrayUtils.objectToBytes(coreIteratorDecorator);//将对象转换为二进制字节数组
         byte[] ret = bytes.get();
-        String r1 = ByteArrayUtils.toHexString(ret);
+        String r1 = ByteArrayUtils.toHexString(ret);//序列化后的反序列化是新的对象
         byte[] r2 = ByteArrayUtils.toByteArray(r1);
         CoreIteratorDecorator coreIteratorDecorator1 = (CoreIteratorDecorator) ByteArrayUtils.bytesToObject(r2).get();
         System.out.println(coreIteratorDecorator1.toString());
