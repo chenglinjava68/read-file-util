@@ -1,5 +1,6 @@
 package com.netease.readfileutil.core;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
@@ -7,6 +8,8 @@ import java.util.Iterator;
  * @author: liguobin
  * @description:封装数据拉取请求
  */
-public interface CoreIterator<T> extends Iterator<T> {
+public interface CoreIterator<T> extends Iterator<T>, Serializable {
+
+    boolean setCoreHttpApiBean(CoreHttpAPIService httpAPIService);
 
 }

@@ -3,7 +3,7 @@ package com.netease.readfileutil.core;
 /**
  * @date: 2018-08-02
  * @author: liguobin
- * @description: httpclient 请求处理
+ * @description: httpclient 请求处理接口，客户端需要实现该Bean
  */
 public interface CoreHttpAPIService {
     /**
@@ -14,4 +14,5 @@ public interface CoreHttpAPIService {
      * @throws Exception
      */
     String doGet(String url, String charset);
+
 }

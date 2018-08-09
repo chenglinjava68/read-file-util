@@ -6,7 +6,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +15,17 @@ import java.io.IOException;
 @Order//高优先级，否则可能出现问题
 public class CoreHttpAPIServiceImpl implements CoreHttpAPIService {
 
-    @Autowired
     private CloseableHttpClient httpClient;
 
-    @Autowired
     private RequestConfig config;
 
+    public void setHttpClient(CloseableHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
+    public void setConfig(RequestConfig config) {
+        this.config = config;
+    }
 
     /**
      * 不带参数的get请求，如果状态码为200，则返回body，如果不为200，则返回null

@@ -7,17 +7,11 @@ import com.netease.readfileutil.rabbitmq.FileMessage;
 import com.netease.readfileutil.redis.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@Component
-@Order
 public class CoreIteratorImpl<T> implements CoreIterator<T> {
 
     Logger logger = LoggerFactory.getLogger(CoreIteratorImpl.class);
@@ -25,7 +19,6 @@ public class CoreIteratorImpl<T> implements CoreIterator<T> {
     /**
      * 这里依赖spring bean,最后把这个也提取处理
      */
-    @Autowired
     private CoreHttpAPIService httpAPIService;
 
     /**
@@ -33,12 +26,21 @@ public class CoreIteratorImpl<T> implements CoreIterator<T> {
      */
     private static volatile String ret = null;
 
-    @PostConstruct
-    public void init() {
-        if (httpAPIService == null) {
-            logger.error("系统不存在CoreHttpAPIService实例");
-        }
+
+    /**
+     * 将由客户端传进来http工具 CoreHttpAPIService的实现类进行http调用
+     *
+     * @param httpAPIService
+     * @return
+     */
+    @Override
+    public boolean setCoreHttpApiBean(CoreHttpAPIService httpAPIService) {
+        if (httpAPIService == null) return false;
+        if (!(httpAPIService instanceof CoreHttpAPIService)) return false;
+        this.httpAPIService = httpAPIService;
+        return true;
     }
+
 
     @Override
     public boolean hasNext() {
