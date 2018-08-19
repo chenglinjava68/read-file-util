@@ -144,6 +144,7 @@ public class CoreReadFileIOImpl implements CoreReadFileIO {
             longMessage.setLastTimeStamp(System.currentTimeMillis());
             //更新reids中的
             if (isCanUpdate(client)) {
+                longMessage.setLastTimeStamp(System.currentTimeMillis());//更新本次最后访问时间戳
                 redisService.setBean(ParamConstants.REDIS_KEY, longMessage);
                 longMessage.setList(list);
                 mqSender.send(longMessage);
