@@ -4,12 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-@RestController
-@EnableScheduling
-@EnableAsync
+@EnableScheduling//后续需要使用
+@EnableAsync//开启异步支持
 public class ReadFileUtilApplication {
 
     public static void main(String[] args) {

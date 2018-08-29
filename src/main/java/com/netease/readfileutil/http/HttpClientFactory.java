@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @date: 2018-08-02
  * @author: liguobin
- * @description:
+ * @description: apache http client 连接池
  */
 @Configuration
 public class HttpClientFactory {

@@ -1,32 +1,33 @@
 package com.netease.readfileutil.core;
 
 import com.netease.readfileutil.commons.ParamConstants;
+import com.netease.readfileutil.core.impl.CoreIteratorDecorator;
+import com.netease.readfileutil.core.impl.CoreIteratorImpl;
 import com.netease.readfileutil.rabbitmq.MQReceiver;
-import com.netease.readfileutil.redis.RedisService;
+import com.netease.readfileutil.util.ByteArrayUtils;
 import com.rabbitmq.client.Channel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Optional;
 
 /**
  * @date: 2018-07-31
  * @author: liguobin
- * @description: 暴露接口
+ * @description: 暴露给客户端的接口
  */
-
 @RestController
 public class CoreController {
+
+    Logger log = LoggerFactory.getLogger(CoreController.class);
 
 
     @Autowired
     private MQReceiver mqReceiver;
-
-    @Autowired
-    private RedisService redisService;
 
     @Autowired
     private CoreAsyncHandler coreAsyncHandler;
@@ -38,9 +39,6 @@ public class CoreController {
     @Autowired
     private CoreHttpAPIService coreHttpAPIService;
 
-    @Autowired
-    private CoreIterator coreIterator;
-
     /**
      * 暴露给客户端获取数据的接口
      * <p>
@@ -49,28 +47,28 @@ public class CoreController {
      * @return
      */
     @RequestMapping(value = "/read", method = RequestMethod.GET)
-    public Iterator<List<String>> read() {
+    public String read() {
+        byte[] ret = null;
         try {
             coreAsyncHandler.handler();//异步调用
-            Thread.sleep(3000);
-            if (coreIterator == null) {
-                return null;
-            }
-            while (coreIterator.hasNext()) {
-                List<String> list = (List<String>) coreIterator.next();
-                list.stream().parallel().forEach(s -> System.out.println(s));
-            }
+            //封装迭代器，此迭代器不会反回含有任何依赖于服务器的bean，而是需要由客户端来提供bean
+            CoreIteratorDecorator coreIteratorDecorator = new CoreIteratorDecorator(new CoreIteratorImpl());
+            Optional<byte[]> bytes = ByteArrayUtils.objectToBytes(coreIteratorDecorator);//将对象转换为二进制字节数组
+            ret = bytes.get();
+            log.info("Bean:" + ret);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return coreIterator;
+        return ByteArrayUtils.toHexString(ret);//这里不能直接new String(ret)
+        //测试的时候注释掉返回值，否则返回值这个迭代器会自动请求http,会出现两条重复数据，找了好久才找的问题所在
+        //具体原因可能是返回值中的bean引起的副作用，待处理
+        //return coreIterator;
     }
 
     /**
      * 测试http拉取数据
      *
      * @return String
-     * @throws Exception
      */
     @RequestMapping(value = "httpclient", method = RequestMethod.GET)
     public String test() {
@@ -90,5 +88,4 @@ public class CoreController {
         if (ret == null) return null;
         return ret;
     }
-
 }

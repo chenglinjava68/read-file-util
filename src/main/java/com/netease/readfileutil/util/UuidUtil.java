@@ -13,14 +13,14 @@ import java.util.UUID;
 public class UuidUtil {
 
     public static void main(String[] args) throws IOException {
-        File file = new File("D:\\git_project\\read-file-util\\data.txt");
+        File file = new File("D:\\read-file-util\\data.txt");
         if (!file.exists()) {
             file.createNewFile();
         }
 
         FileOutputStream out = new FileOutputStream(file);
         String uuid = "";
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 10; i++) {//使用long
             uuid = System.nanoTime() + "\r\n";
             out.write(uuid.getBytes());
         }
@@ -28,6 +28,11 @@ public class UuidUtil {
     }
 
 
+    /**
+     * 配置file路径，一条数据有四条日子[读取日志，生成日志，消费日志，获取日志]，通过这个来判断数据即可
+     *
+     * @return
+     */
     public static String getUuid() {
         return UUID.randomUUID().toString().replace("-", "");
     }
