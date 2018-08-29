@@ -24,7 +24,7 @@ public class ParamConstants {
     public static final String FANOUT_EXCHANGE = "fanoutExchange";
 //    public static final String ROUTINGKEY = "routingkey";
 
-    public static final String path = "C:\\Users\\liguobin\\Desktop\\read-file-util\\read-file-util\\data.txt";
+    public static final String path = "D:\\git_project\\read-file-util\\data.txt";
 
     //迭代器默认发送的请求地址
     public static final String HOST = "http://127.0.0.1:8080/read";

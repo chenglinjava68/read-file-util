@@ -13,14 +13,14 @@ import java.util.UUID;
 public class UuidUtil {
 
     public static void main(String[] args) throws IOException {
-        File file = new File("C:\\Users\\liguobin\\Desktop\\read-file-util\\read-file-util\\data.txt");
+        File file = new File("D:\\git_project\\read-file-util\\data.txt");
         if (!file.exists()) {
             file.createNewFile();
         }
 
         FileOutputStream out = new FileOutputStream(file);
         String uuid = "";
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 30; i++) {
             uuid = System.nanoTime() + "\r\n";
             out.write(uuid.getBytes());
         }
